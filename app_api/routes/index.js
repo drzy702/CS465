@@ -19,7 +19,9 @@ router
 router
     .route('/trips/:tripCode')
     .get(tripsController.tripsFindByCode)
-    .put(authController.authenticateJWT, tripsController.tripsUpdateTrip);
+    .put(authController.authenticateJWT, tripsController.tripsUpdateTrip)
+    // Delete a trip (protected route)
+    .delete(authController.authenticateJWT, tripsController.tripsDeleteTrip);
 
 
 module.exports = router;

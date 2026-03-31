@@ -13,6 +13,9 @@
         </p> 
         <div *ngIf="isLoggedIn()">
             <button (click)="editTrip(trip)" class="btn btn-info">Edit Trip</button>
+
+            <!-- Delete selected trip -->
+            <button (click)="deleteTrip(trip)" class="btn btn-danger ms-2">Delete Trip</button>
         </div>
     </div> 
 </div> 

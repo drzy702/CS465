@@ -72,22 +72,28 @@ constructor(
   // result and only process when the Observable condition is satisfied 
   // Uncomment the two console.log messages for additional debugging 
   // information. 
-  public login(user: User, passwd: string) : void { 
-    this.tripDataService.login(user,passwd) 
-      .subscribe({ 
-        next: (value: any) => { 
-          if(value) 
-          { 
-            console.log(value); 
-            this.authResp = value; 
-            this.saveToken(this.authResp.token); 
-          } 
-        }, 
-        error: (error: any) => { 
-          console.log('Error: ' + error); 
-        } 
-      }) 
-  }  
+  // public login(user: User, passwd: string) : void { 
+  //   this.tripDataService.login(user,passwd) 
+  //     .subscribe({ 
+  //       next: (value: any) => { 
+  //         if(value) 
+  //         { 
+  //           console.log(value); 
+  //           this.authResp = value; 
+  //           this.saveToken(this.authResp.token); 
+  //         } 
+  //       }, 
+  //       error: (error: any) => { 
+  //         console.log('Error: ' + error); 
+  //       } 
+  //     }) 
+  // }  
+
+  // This method now just returns the login request (no subscribe here)
+  // The component will handle success and error
+  public login(user: User, passwd: string) {
+  return this.tripDataService.login(user, passwd);
+}
  
   // Register method that leverages the register method in 
   // tripDataService 

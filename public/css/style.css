@@ -41,16 +41,16 @@ img {
 }
 /** Navigation **/
 #navigation {
-	background: url(../images/bg-navigation.png) no-repeat;
+	background: #4f9c96;
 	clear: both;
 	height: 50px;
-	width: 860px;
+	width: 984px;
 	margin: 0 auto;
 	padding: 1px;
 }
 #navigation ul {
 	display: inline-block;
-	width: 860px;
+	width: 984px;
 	list-style: none;
 	margin: 0;
 	padding: 0;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Trip } from '../models/trip';
@@ -14,6 +14,8 @@ import { Authentication } from '../services/authentication';
 export class TripCard implements OnInit{
 
   @Input('trip') trip: any;
+  // This sends the delete event to the parent component
+  @Output() deleteTripEvent = new EventEmitter<string>();
 
   constructor(private router: Router, private authenticationService: Authentication) {}
 
@@ -25,6 +27,11 @@ export class TripCard implements OnInit{
     localStorage.removeItem('tripCode');
     localStorage.setItem('tripCode', trip.code);
     this.router.navigate(['edit-trip']);
+  }
+
+    // Send the trip code to the parent component for deleting
+  public deleteTrip(trip: Trip): void {
+    this.deleteTripEvent.emit(trip.code);
   }
 
   public isLoggedIn() 
