@@ -25,6 +25,7 @@ const travel = async function (req, res, next) {
             res.render("travel", {
                 title: "Travlr Getaways",
                 trips: json,
+                tripsJSON: JSON.stringify(json),
                 message: ""
             });
         })
