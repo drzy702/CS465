@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="background">
+    <div id="page">
+      {{> header}}
+    </div>
+
+    <div id="contents">
+      <div class="box">
+        <div>
+          <div class="body">
+            <h1>Register</h1>
+
+            <form id="registerForm" class="auth-form">
+              <p>
+                <label for="name">Name</label><br>
+                <input type="text" id="name" placeholder="Name" required />
+              </p>
+
+              <p>
+                <label for="email">Email</label><br>
+                <input type="email" id="email" placeholder="Email" required />
+              </p>
+
+              <p>
+                <label for="password">Password</label><br>
+                <input type="password" id="password" placeholder="Password" required />
+              </p>
+
+              <p>
+                <button type="submit" class="btn">Register</button>
+              </p>
+            </form>
+
+            <p id="registerMessage"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{> footer}}
+  </div>
+
+  <script>
+    console.log('register script loaded');
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      console.log('submitted');
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, password })
+      })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          console.log('API response object:', data);
+
+          const token = data.token ? data.token : data;
+
+          if (token) {
+            console.log('User registered successfully');
+            localStorage.setItem('travlr-token', token);
+            window.location.href = '/';
+          } else {
+            document.getElementById('registerMessage').textContent = 'Registration failed';
+          }
+        })
+        .catch(function(err) {
+          console.error('register error:', err);
+          document.getElementById('registerMessage').textContent = 'Server error';
+        });
+    });
+  </script>
+</body>
+</html>

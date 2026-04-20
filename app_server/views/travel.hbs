@@ -31,6 +31,16 @@
 								<option value="3000">Under $3000</option>
 							</select>
 
+							{{!-- Filter by star rating --}}
+							<select id="starFilter">
+								<option value="">All Ratings</option>
+								<option value="5">5 Stars Only</option>
+								<option value="4">4+ Stars</option>
+								<option value="3">3+ Stars</option>
+								<option value="2">2+ Stars</option>
+							</select>
+
+
 							{{!-- Sort trips by price --}}
 							<select id="sortOption">
 								<option value="">Sort By</option>
@@ -57,6 +67,11 @@
 								<p><strong>Length:</strong> {{this.length}}</p>
 								<p><strong>Resort:</strong> {{this.resort}}</p>
 								{{{this.description}}}
+
+								<button class="book-btn" data-tripcode="{{this.code}}">
+									Book Now
+								</button>
+
 							</li>
 							{{/each}}
 						</ul>
@@ -79,8 +94,10 @@
 		// Get references to input and dropdown elemets
 		const searchInput = document.getElementById("searchInput");
 		const priceFilter = document.getElementById("priceFilter");
+		const starFilter = document.getElementById("starFilter");
 		const sortOption = document.getElementById("sortOption");
 		const list = document.getElementById("sites");
+
 
 		// Display trips on the page
 		function renderTrips(trips) {
@@ -109,6 +126,9 @@
         <p><strong>Length:</strong> ${trip.length}</p>
         <p><strong>Resort:</strong> ${trip.resort}</p>
         ${trip.description}
+		 <button class="book-btn" data-tripcode="${trip.code}">
+			Book Now
+		 </button>
       `;
 
 				list.appendChild(li);
@@ -138,6 +158,15 @@
 				);
 			}
 
+			const minStars = starFilter.value;
+			if (minStars) {
+				filtered = filtered.filter(trip => {
+					const match = trip.resort.match(/\d+/);
+					const stars = match ? parseInt(match[0]) : 0;
+					return stars >= parseInt(minStars);
+				});
+			}
+
 			// sort trips by price
 			if (sortOption.value === "low") {
 				filtered.sort((a, b) =>
@@ -157,12 +186,51 @@
 		// Run filtering when user interacts with inputs
 		searchInput.addEventListener("input", filterTrips);
 		priceFilter.addEventListener("change", filterTrips);
+		starFilter.addEventListener("change", filterTrips);
 		sortOption.addEventListener("change", filterTrips);
 	</script>
 
 	{{!-- Debug logging all trips to console --}}
 	<script>
 		console.log(allTrips);
+	</script>
+
+	<script>
+	document.addEventListener("click", async function (e) {
+	if (e.target.classList.contains("book-btn")) {
+		const tripCode = e.target.dataset.tripcode;
+		const token = localStorage.getItem("travlr-token");
+
+		if (!token) {
+		alert("Please log in to book a trip.");
+		window.location.href = "/login";
+		return;
+		}
+
+		try {
+		const response = await fetch('/api/bookings', {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + token
+			},
+			body: JSON.stringify({ tripCode })
+		});
+
+		const data = await response.json();
+
+		if (!response.ok) {
+			alert(data.message || "Booking failed.");
+			return;
+		}
+
+		alert("Booking successful!");
+		} catch (err) {
+		console.error(err);
+		alert("Booking failed.");
+		}
+	}
+	});
 	</script>
 
 </body>

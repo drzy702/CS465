@@ -4,9 +4,15 @@ const router = express.Router(); // Router logic
 
 const tripsController = require("../controllers/trips");
 const authController = require("../controllers/authentication");
+const bookingController = require('../controllers/booking');
 
 router.route("/register").post(authController.register);
 router.route("/login").post(authController.login);
+router.route('/bookings')
+  .post(bookingController.createBooking)
+  .get(authController.authenticateJWT, bookingController.getMyBookings);
+router.route('/bookings/:bookingId')
+  .delete(authController.authenticateJWT, bookingController.deleteBooking);
 
 // define route for our trips endpoint
 router

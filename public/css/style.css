@@ -32,7 +32,22 @@ img {
 #header {
 	margin-bottom: 20px;
 	padding-top: 20px;
+	position: relative;
 }
+
+#authSection {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+#authSection a {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 /** Logo **/
 #logo {
 	float: left;

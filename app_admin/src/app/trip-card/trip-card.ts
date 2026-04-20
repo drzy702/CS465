@@ -11,17 +11,17 @@ import { Authentication } from '../services/authentication';
   templateUrl: './trip-card.html',
   styleUrl: './trip-card.css',
 })
-export class TripCard implements OnInit{
-
+export class TripCard implements OnInit {
   @Input('trip') trip: any;
   // This sends the delete event to the parent component
   @Output() deleteTripEvent = new EventEmitter<string>();
 
-  constructor(private router: Router, private authenticationService: Authentication) {}
+  constructor(
+    private router: Router,
+    private authenticationService: Authentication,
+  ) {}
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   public editTrip(trip: Trip) {
     localStorage.removeItem('tripCode');
@@ -29,14 +29,12 @@ export class TripCard implements OnInit{
     this.router.navigate(['edit-trip']);
   }
 
-    // Send the trip code to the parent component for deleting
+  // Send the trip code to the parent component for deleting
   public deleteTrip(trip: Trip): void {
     this.deleteTripEvent.emit(trip.code);
   }
 
-  public isLoggedIn() 
-{ 
-return this.authenticationService.isLoggedIn(); 
-} 
-
+  public isLoggedIn() {
+    return this.authenticationService.isLoggedIn();
+  }
 }
