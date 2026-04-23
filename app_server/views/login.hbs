@@ -45,47 +45,59 @@
   </div>
 
   <script>
+    // Debug message to confirm script is loaded in the browser
     console.log('login script loaded');
 
+    // Listen for form submission
     document.getElementById('loginForm').addEventListener('submit', function (e) {
-      e.preventDefault();
+      e.preventDefault(); // Prevent page refresh on form submit
       console.log('login submitted');
 
+      // Get values entered by the user
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
+      // Send login request to backend API
       fetch('/api/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json' // Tell server we're sending JSON
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }) // Convert data to JSON
       })
         .then(function (response) {
+          // If login fails, extract error message and throw it
           if (!response.ok) {
             return response.json().then(function (data) {
               throw new Error(data.message || 'Login failed');
             });
           }
-          return response.json();
+          return response.json(); // If successful, parse response
         })
         .then(function (data) {
           console.log('login response:', data);
 
+          // Get token from response (handles different formats)
           const token = data.token ? data.token : data;
 
+          // If token exists, save it and redirect user
           if (token) {
-            localStorage.setItem('travlr-token', token);
-            window.location.href = '/';
+            localStorage.setItem('travlr-token', token); // Store JWT in browser
+            window.location.href = '/'; // Redirect to home page
           } else {
+            // Show message if something went wrong
             document.getElementById('loginMessage').textContent = 'Login failed';
           }
         })
         .catch(function (err) {
           console.error('login error:', err);
-          document.getElementById('loginMessage').textContent = err.message || 'Server error';
+
+          // Display error message to user
+          document.getElementById('loginMessage').textContent =
+            err.message || 'Server error';
         });
     });
   </script>
 </body>
+
 </html>

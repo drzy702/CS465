@@ -50,44 +50,54 @@
   </div>
 
   <script>
+    // Debug message to confirm script is loaded
     console.log('register script loaded');
 
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+    // Listen for form submission
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent page refresh
       console.log('submitted');
 
+      // Get user input values
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
+      // Send registration request to backend API
       fetch('/api/register', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json' // Sending JSON data
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password }) // Convert data to JSON
       })
-        .then(function(response) {
-          return response.json();
+        .then(function (response) {
+          return response.json(); // Parse response from server
         })
-        .then(function(data) {
+        .then(function (data) {
           console.log('API response object:', data);
 
+          // Extract token from response
           const token = data.token ? data.token : data;
 
+          // If registration successful, save token and redirect
           if (token) {
             console.log('User registered successfully');
-            localStorage.setItem('travlr-token', token);
-            window.location.href = '/';
+            localStorage.setItem('travlr-token', token); // Store JWT token
+            window.location.href = '/'; // Redirect to home page
           } else {
+            // Show error message if registration failed
             document.getElementById('registerMessage').textContent = 'Registration failed';
           }
         })
-        .catch(function(err) {
+        .catch(function (err) {
           console.error('register error:', err);
+
+          // Show generic error message
           document.getElementById('registerMessage').textContent = 'Server error';
         });
     });
   </script>
 </body>
+
 </html>

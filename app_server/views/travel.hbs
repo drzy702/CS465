@@ -196,41 +196,41 @@
 	</script>
 
 	<script>
-	document.addEventListener("click", async function (e) {
-	if (e.target.classList.contains("book-btn")) {
-		const tripCode = e.target.dataset.tripcode;
-		const token = localStorage.getItem("travlr-token");
+		document.addEventListener("click", async function (e) {
+			if (e.target.classList.contains("book-btn")) {
+				const tripCode = e.target.dataset.tripcode;
+				const token = localStorage.getItem("travlr-token");
 
-		if (!token) {
-		alert("Please log in to book a trip.");
-		window.location.href = "/login";
-		return;
-		}
+				if (!token) {
+					alert("Please log in to book a trip.");
+					window.location.href = "/login";
+					return;
+				}
 
-		try {
-		const response = await fetch('/api/bookings', {
-			method: 'POST',
-			headers: {
-			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + token
-			},
-			body: JSON.stringify({ tripCode })
+				try {
+					const response = await fetch('/api/bookings', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + token
+						},
+						body: JSON.stringify({ tripCode })
+					});
+
+					const data = await response.json();
+
+					if (!response.ok) {
+						alert(data.message || "Booking failed.");
+						return;
+					}
+
+					alert("Booking successful!");
+				} catch (err) {
+					console.error(err);
+					alert("Booking failed.");
+				}
+			}
 		});
-
-		const data = await response.json();
-
-		if (!response.ok) {
-			alert(data.message || "Booking failed.");
-			return;
-		}
-
-		alert("Booking successful!");
-		} catch (err) {
-		console.error(err);
-		alert("Booking failed.");
-		}
-	}
-	});
 	</script>
 
 </body>
