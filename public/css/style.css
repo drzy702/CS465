@@ -4,6 +4,25 @@ body {
 	font-family: "Times New Roman", Times, serif;
 	margin: 0;
 }
+
+.pagination {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.page-btn {
+	margin: 4px;
+	padding: 8px 12px;
+	border: none;
+	background-color: #f5d28c;
+	cursor: pointer;
+}
+
+.page-btn.active {
+	background-color: #0b5c6b;
+	color: white;
+}
+
 #background {
 	background: url(../images/bg-pattern.jpg) repeat-x center top;
 	min-height: 1318px;

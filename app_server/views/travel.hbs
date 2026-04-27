@@ -75,6 +75,7 @@
 							</li>
 							{{/each}}
 						</ul>
+						<div id="pagination" class="pagination"></div>
 					</div>
 				</div>
 			</div>
@@ -97,6 +98,9 @@
 		const starFilter = document.getElementById("starFilter");
 		const sortOption = document.getElementById("sortOption");
 		const list = document.getElementById("sites");
+		let currentPage = 1;
+		const tripsPerPage = 4;
+		let currentFilteredTrips = [...allTrips];
 
 
 		// Display trips on the page
@@ -104,40 +108,68 @@
 
 			// Clear current list before rendering new resulrts
 			list.innerHTML = "";
+			currentFilteredTrips = trips;
+
+			const start = (currentPage - 1) * tripsPerPage;
+			const end = start + tripsPerPage;
+			const paginatedTrips = trips.slice(start, end);
 
 			// Show message if no results
 			if (trips.length === 0) {
 				list.innerHTML = "<p>No trips found.</p>";
+				document.getElementById("pagination").innerHTML = "";
 				return;
 			}
 
-			// Loop through trips and create HTML for each
-			trips.forEach(trip => {
+			paginatedTrips.forEach(trip => {
 				const li = document.createElement("li");
 
 				li.innerHTML = `
-        <a href="/api/trips/${trip.code}">
-          <img src="images/${trip.image}" alt="Img">
-        </a>
-        <h2>
-          <a href="/api/trips/${trip.code}">${trip.name}</a>
-        </h2>
-        <p><strong>Price per person:</strong> $${trip.perPerson}</p>
-        <p><strong>Length:</strong> ${trip.length}</p>
-        <p><strong>Resort:</strong> ${trip.resort}</p>
-        ${trip.description}
-		 <button class="book-btn" data-tripcode="${trip.code}">
-			Book Now
-		 </button>
-      `;
+					<a href="/api/trips/${trip.code}">
+					<img src="images/${trip.image}" alt="Img">
+					</a>
+					<h2>
+					<a href="/api/trips/${trip.code}">${trip.name}</a>
+					</h2>
+					<p><strong>Price per person:</strong> $${trip.perPerson}</p>
+					<p><strong>Length:</strong> ${trip.length}</p>
+					<p><strong>Resort:</strong> ${trip.resort}</p>
+					${trip.description}
+					<button class="book-btn" data-tripcode="${trip.code}">
+						Book Now
+					</button>
+				`;
 
 				list.appendChild(li);
 			});
+			renderPagination(trips.length);
+		}
 
+
+
+		function renderPagination(totalTrips) {
+			const pagination = document.getElementById("pagination");
+			pagination.innerHTML = "";
+
+			const totalPages = Math.ceil(totalTrips / tripsPerPage);
+
+			for (let i = 1; i <= totalPages; i++) {
+				const button = document.createElement("button");
+				button.textContent = i;
+				button.className = i === currentPage ? "page-btn active" : "page-btn";
+
+				button.addEventListener("click", function () {
+					currentPage = i;
+					renderTrips(currentFilteredTrips);
+				});
+
+				pagination.appendChild(button);
+			}
 		}
 
 		// Filter and sort tirps based on user input
 		function filterTrips() {
+			currentPage = 1;
 
 			// Copy all trips into a new array
 			let filtered = [...allTrips];
@@ -232,6 +264,8 @@
 			}
 		});
 	</script>
+
+
 
 </body>
 
